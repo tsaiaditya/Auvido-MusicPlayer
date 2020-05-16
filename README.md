@@ -22,9 +22,9 @@ A helper class to extract prominent colors from an image.
 Developing
  
  ## Screenshots ##
-![picture alt](https://github.com/Mohamed99ayman/Gramophone-MusicPlayer/blob/master/screenshots/s1.jpg)
-![picture alt](https://github.com/Mohamed99ayman/Gramophone-MusicPlayer/blob/master/screenshots/s2.jpg)
-![picture alt](https://github.com/Mohamed99ayman/Gramophone-MusicPlayer/blob/master/screenshots/s3.jpg)
-![picture alt](https://github.com/Mohamed99ayman/Gramophone-MusicPlayer/blob/master/screenshots/s4.jpg)
-![picture alt](https://github.com/Mohamed99ayman/Gramophone-MusicPlayer/blob/master/screenshots/s5.jpg)
-![picture alt](https://github.com/Mohamed99ayman/Gramophone-MusicPlayer/blob/master/screenshots/s6.jpg)
+![picture alt](./screenshots/s1.jpg)
+![picture alt](./screenshots/s2.jpg)
+![picture alt](./screenshots/s3.jpg)
+![picture alt](./screenshots/s4.jpg)
+![picture alt](./screenshots/s5.jpg)
+![picture alt](./screenshots/s6.jpg)
