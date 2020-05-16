@@ -22,9 +22,15 @@ A helper class to extract prominent colors from an image.
 Developing
  
  ## Screenshots ##
+ #### Songs Fragment
 ![picture alt](./screenshots/s1.jpg)
+#### Albums Fragment
 ![picture alt](./screenshots/s2.jpg)
+#### Notification
 ![picture alt](./screenshots/s3.jpg)
+#### Search a Song
 ![picture alt](./screenshots/s4.jpg)
+#### Player Component
 ![picture alt](./screenshots/s5.jpg)
+#### Individual Album
 ![picture alt](./screenshots/s6.jpg)
