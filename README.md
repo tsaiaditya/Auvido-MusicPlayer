@@ -1,6 +1,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e8e29e3b85a49fbb21e98903627403e)](https://app.codacy.com/manual/Mohamed99ayman/Gramophone-MusicPlayer/dashboard?bid=15522340)
 
-# Gramophone-MusicPlayer
+# Auvido-MusicPlayer
 A simple MusicPlayer that allows the user to select songs from their library and play them.
 
 ## Features ##
