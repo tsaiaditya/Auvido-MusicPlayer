@@ -23,26 +23,28 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.BaseRequestOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.mediaplayer.R;
 import com.example.mediaplayer.adapters.SongAlbumAdapter;
+
 import interfaces.OnClickListen;
+
 import static com.example.mediaplayer.activities.MainActivity.al;
 
-public class AlbumActivity extends AppCompatActivity implements OnClickListen {
+public class AlbumActivity<requestOptions> extends AppCompatActivity implements OnClickListen {
 
 
     protected ImageView imageView;
     protected int position;
     private TextView textView1,textView2;
     protected RecyclerView recyclerView;
-    protected RecyclerView.LayoutManager mmanager;
+    protected RecyclerView.LayoutManager manager;
     private LinearLayout linearLayout;
     static SongAlbumAdapter songalbumAdapter;
     private Palette.Swatch lightVibrantSwatch;
     private Palette.Swatch darkMutedSwatch;
-
 
 
     @Override
@@ -55,7 +57,7 @@ public class AlbumActivity extends AppCompatActivity implements OnClickListen {
         recyclerView.setHasFixedSize(true);
         textView1=findViewById(R.id.text1);
         textView2=findViewById(R.id.text2);
-        mmanager=new LinearLayoutManager(this);
+        manager =new LinearLayoutManager(this);
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
         position = bundle.getInt("index");
@@ -65,14 +67,15 @@ public class AlbumActivity extends AppCompatActivity implements OnClickListen {
         textView1.setText(al.get(position).get(0).getArtist());
         String size=(al.get(position).size())+"";
         textView2.setText(size);
+        Object requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
 
         Glide.with(this)
                 .load(ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"),al.get(position).get(0).getAlbumID()).toString())
+                .apply((BaseRequestOptions<?>) requestOptions)
                 .thumbnail(0.2f)
                 .centerCrop()
                 .placeholder(R.drawable.track)
                 .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -93,7 +96,7 @@ public class AlbumActivity extends AppCompatActivity implements OnClickListen {
         verticalDecoration.setDrawable(verticalDivider);
         recyclerView.addItemDecoration(verticalDecoration);
 
-        recyclerView.setLayoutManager(mmanager);
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(songalbumAdapter);
 
 
@@ -102,7 +105,8 @@ public class AlbumActivity extends AppCompatActivity implements OnClickListen {
 
     @Override
     public void onClick(int position) {
-        Intent intent=new Intent(MainActivity.getInstance(), PlayerActivity.class).putExtra("index",position).putExtra("val",1).putExtra("from",true);
+        position = position;
+        Intent intent=new Intent(this, PlayerActivity.class).putExtra("index",position).putExtra("val",1).putExtra("from",true);
         startActivity(intent);
     }
 

@@ -160,7 +160,7 @@ private Filter  filter=new Filter() {
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
     songs.clear();
-    songs.add(new Song("shufflee"));
+    songs.add(new Song("shuffle"));
     songs.addAll((List)results.values);
     notifyDataSetChanged();
     }

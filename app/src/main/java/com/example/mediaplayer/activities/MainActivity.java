@@ -1,6 +1,6 @@
 package com.example.mediaplayer.activities;
+
 import android.Manifest;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +8,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -19,7 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +32,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.widget.SearchView;
+
+import com.example.mediaplayer.R;
+import com.example.mediaplayer.adapters.SongAdapter;
+import com.example.mediaplayer.adapters.ViewPagerAdapter;
+import com.example.mediaplayer.fragments.AlbumsFragment;
+import com.example.mediaplayer.fragments.SongsFragment;
+import com.example.mediaplayer.models.DataReading;
+import com.example.mediaplayer.models.Song;
+import com.example.mediaplayer.notification.NotiService;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,19 +49,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import android.support.design.widget.TabLayout;
-
-import com.example.mediaplayer.fragments.AlbumsFragment;
-import com.example.mediaplayer.models.DataReading;
-import com.example.mediaplayer.notification.NotiService;
-import com.example.mediaplayer.R;
-import com.example.mediaplayer.models.Song;
-import com.example.mediaplayer.adapters.SongAdapter;
-import com.example.mediaplayer.fragments.SongsFragment;
-import com.example.mediaplayer.adapters.ViewPagerAdapter;
-
-import static com.example.mediaplayer.notification.NofiticationCenter.channel_1_ID;
 import static com.example.mediaplayer.adapters.SongAdapter.songs;
+import static com.example.mediaplayer.notification.NofiticationCenter.channel_1_ID;
 
 public class MainActivity extends AppCompatActivity {
     private int Storage_Permission_code=1;
@@ -73,13 +74,14 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout miniplayer;
     TextView textView;
     public static   ImageView imageView;
-    public static Notification notification;
+    public static NotificationCompat.Builder notification;
+    public String cur_song_name = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        onNewIntent(getIntent());
         setContentView(R.layout.activity_main);
         textView=findViewById(R.id.mini_player_title);
         tableLayout=findViewById(R.id.table_Layout);
@@ -172,6 +174,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        boolean fromNotification = intent.getBooleanExtra("from_notification", false);
+        if (fromNotification){
+            //String someData = intent.getData().getSchemeSpecificPart();       //some data is the unique string for each notification
+            cur_song_name = intent.getStringExtra("song_name");
+        }
+    }
     private void start(){
         dataReading=new DataReading(this);
         songs=new ArrayList<>();
@@ -180,10 +192,11 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(songs);
         SongAdapter.songs=songs;
         albums=dataReading.getAlbums();
-        textView.setText(songs.get(0).getName());
+        if(cur_song_name == "")
+            textView.setText(songs.get(0).getName());
+        else
+            textView.setText(cur_song_name);
         shift();
-
-
     }
     public void shift(){
         Iterator it = albums.entrySet().iterator();
@@ -221,10 +234,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendOnChannel(String name,String artist,int position) {
 
-        Intent activityIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,
-                0, activityIntent, 0);
+        Intent activityIntent = new Intent(null, Uri.parse("some data"), this, MainActivity.class);
+        activityIntent.putExtra("from_notification", true);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         int plaorpa;
         if(PlayerActivity.playin){
             plaorpa=R.drawable.pause_24dp;
@@ -254,10 +268,11 @@ public class MainActivity extends AppCompatActivity {
                         .setMediaSession(mediaSession.getSessionToken()))
                 .setSubText(artist)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .build();
+                 .setAutoCancel(true);
 
 
-        notificationManager.notify(1, notification);
+        notificationManager.notify(1, notification.build());
+        activityIntent.putExtra("song_name",name);
     }
 
 
