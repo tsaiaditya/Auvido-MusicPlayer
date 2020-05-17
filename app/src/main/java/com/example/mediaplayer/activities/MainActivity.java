@@ -248,6 +248,15 @@ public class MainActivity extends AppCompatActivity {
         }else{
             plaorpa=R.drawable.play_arrow_24dp;
         }
+        int i;
+        for(i = 0; i<songs.size();){
+            if(songs.get(i).getName().equals(name)){
+                position = i;
+                break;
+            }
+            else
+                i++;
+        }
         metadataRetriever = new MediaMetadataRetriever();
         metadataRetriever.setDataSource(songs.get(position).getPath());
         arts= metadataRetriever.getEmbeddedPicture();
