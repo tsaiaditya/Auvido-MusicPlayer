@@ -146,7 +146,9 @@ private Filter  filter=new Filter() {
             String filterpattern=constraint.toString().toLowerCase().trim();
 
             for (Song oneSong:allSongs){
-                if(oneSong.getName().toLowerCase().startsWith(filterpattern)||oneSong.getArtist().toLowerCase().startsWith(filterpattern)){
+                if(oneSong.getName().toLowerCase().startsWith(filterpattern)||
+                        oneSong.getArtist().toLowerCase().startsWith(filterpattern)||
+                        oneSong.getName().toLowerCase().indexOf(filterpattern)!=-1){
                     filteredList.add(oneSong);
                 }
             }

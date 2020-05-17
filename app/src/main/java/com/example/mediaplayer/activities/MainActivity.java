@@ -34,8 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mediaplayer.R;
-import com.example.mediaplayer.adapters.SongAdapter;
-import com.example.mediaplayer.adapters.ViewPagerAdapter;
+import com.example.mediaplayer.adapters.*;
+//import com.example.mediaplayer.adapters.ViewPagerAdapter;
 import com.example.mediaplayer.fragments.AlbumsFragment;
 import com.example.mediaplayer.fragments.SongsFragment;
 import com.example.mediaplayer.models.DataReading;
@@ -118,11 +118,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PlayerActivity.getInstance().play();
-                if(PlayerActivity.playin==true){
+                if(PlayerActivity.getInstance().playin){
                     imageView.setBackgroundResource(R.drawable.pause_24dp);
-                }else{
+                }
+                else{
                     imageView.setBackgroundResource(R.drawable.play_arrow_24dp);
-
+                    PlayerActivity.getInstance().pause();
                 }
             }
         });
@@ -192,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(songs);
         SongAdapter.songs=songs;
         albums=dataReading.getAlbums();
+        AlbumAdapter.albums = albums;
         if(cur_song_name == "")
             textView.setText(songs.get(0).getName());
         else
@@ -226,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                SongsFragment.search(newText);
+                //AlbumsFragment.search(newText);
                 return false;
             }
         });

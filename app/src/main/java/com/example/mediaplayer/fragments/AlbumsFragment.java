@@ -53,5 +53,7 @@ public class AlbumsFragment extends Fragment implements OnClickListen {
         startActivity(intent);
     }
 
-
+    public static void search(String text){
+        albumAdapter.getFilter().filter(text);
+    }
 }

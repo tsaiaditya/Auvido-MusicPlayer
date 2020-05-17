@@ -17,14 +17,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mediaplayer.R;
-import com.example.mediaplayer.models.Song;
 import com.example.mediaplayer.activities.MainActivity;
+import com.example.mediaplayer.models.Song;
 
+import java.util.HashMap;
+import java.util.List;
 
 import interfaces.OnClickListen;
 
 public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> implements Filterable {
     private OnClickListen alclicklisten;
+    public static HashMap<String, List<Song>> albums=new HashMap<>();
+    //public static  ArrayList<ArrayList<Song>>al=new ArrayList<>();
+
 //for search
     //ArrayList<ArrayList<Song>>filtered=new ArrayList<>();
 
@@ -70,11 +75,6 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         return MainActivity.al.size();
     }
 
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
        private TextView album,artist;
@@ -94,28 +94,48 @@ public class AlbumAdapter  extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
             onClickListen.onClick(getAdapterPosition());
         }
     }
-   /* private Filter  filter=new Filter() {
+
+    @Override
+    public Filter getFilter(){
+        return null;
+    }
+    /*private Filter  filter=new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            HashMap<String, List<Song>> filtered=new HashMap<>();
             if (constraint == null || constraint.length() == 0) {
-                filtered = MainActivity.al;
-            } else {
-                String filterpattern = constraint.toString().toLowerCase().trim();
-                for (int i=0;i<filtered.size(); i++) {
-                    if ((Song)filtered[i][0].getName().toLowerCase().startsWith(filterpattern) || oneSong.getArtist().toLowerCase().startsWith(filterpattern)) {
-                        filteredList.add(oneSong);
-                    }
+                Iterator it = albums.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry mapElement = (Map.Entry) it.next();
+                    filtered.put(mapElement.getKey().toString(),(List<Song>)mapElement.getValue());
+                    it.remove();
                 }
-
-                return null;
             }
-
-            @Override
-            protected void publishResults (CharSequence constraint, FilterResults results){
-
+            else {
+                String filterpattern = constraint.toString().toLowerCase().trim();
+                Iterator it = albums.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry mapElement = (Map.Entry) it.next();
+                    if(mapElement.getKey().toString().toLowerCase().startsWith((filterpattern)))
+                        filtered.put(mapElement.getKey().toString(),(List<Song>)mapElement.getValue());
+                    it.remove();
+                }
             }
+            FilterResults filterResults=new FilterResults();
+            filterResults.values=filtered;
+            return filterResults;
         }
-    }*/
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            //HashMap<String, List<Song>> albums_temp=new HashMap<>();
+            //albums_temp.putAll(albums);
+            albums.clear();
+            //Iterator it = albums_temp.entrySet().iterator();
+            albums.putAll((HashMap<String, List<Song>>)results.values);
+            notifyDataSetChanged();
+        }
+    };*/
 
 
 }
